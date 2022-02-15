@@ -26,6 +26,12 @@ export class Socket {
 
   private listenCallback: ListenCallback;
 
+  /**
+   * it sets url, protocols and options initally
+   * @param url @type string
+   * @param protocols @type Protocols
+   * @param options @type Options
+   */
   constructor(url: string, protocols?: Protocols, options?: Options) {
     this.url = url;
 
@@ -38,24 +44,37 @@ export class Socket {
     }
   }
 
+  /**
+   *  it tries to reconnect and pass event to onClose
+   * @param event @type CloseEvent
+   */
   private readonly onCloseHandler = (event: CloseEvent) => {
     if (isDefined(this.onClose)) {
       this.onClose(event);
     }
 
     setTimeout(() => {
-      this.socket = new WebSocket(this.url, this.protocols);
+      this.connect();
     }, this.options.reConnectTime);
   };
 
+  /**
+   * it passes event to onOpen
+   * @param event @type Event
+   */
   private readonly onOpenHandler = (event: Event) => {
-    if (isDefined(this.onClose)) {
+    if (isDefined(this.onOpen)) {
       this.onOpen(event);
     }
   };
 
+  /**
+   * it passes event to onOpen, then pass the parsed data
+   * to listenCallback if parsable
+   * @param event @type MessageEvent
+   */
   private readonly onMessageHandler = (event: MessageEvent) => {
-    if (isDefined(this.onClose)) {
+    if (isDefined(this.onMessage)) {
       this.onMessage(event);
     }
 
@@ -74,12 +93,20 @@ export class Socket {
     }
   };
 
+  /**
+   * it passes event to onError
+   * @param event @type Event
+   */
   private readonly onErrorHandler = (event: Event) => {
-    if (isDefined(this.onClose)) {
+    if (isDefined(this.onError)) {
       this.onError(event);
     }
   };
 
+  /**
+   * creates connection and add event listeners
+   * @returns Socket
+   */
   readonly connect: Connect = () => {
     this.socket = new WebSocket(this.url, this.protocols);
 
@@ -96,6 +123,10 @@ export class Socket {
     return this;
   };
 
+  /**
+   * it sets listenCallback for the future incomming messages
+   * @returns Socket
+   */
   readonly listen: Listen = (callback) => {
     this.listenCallback = callback;
 

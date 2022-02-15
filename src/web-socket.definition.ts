@@ -1,16 +1,10 @@
 import { Socket } from './web-socket';
 
+export type ControlMethod = (event: Event) => void;
+export type Protocols = string | string[];
 export interface Options {
   reConnectTime: number;
 }
-
-export type ControlMethod = (event: Event) => void;
-
-export type Protocols = string | string[];
-
-export type ListenCallback = (data: any) => void;
-export type Listen = (callback: ListenCallback) => Socket;
-export type Connect = () => Socket;
 
 export interface MessageEvent extends Event {
   data: any;
@@ -19,9 +13,11 @@ export interface MessageEvent extends Event {
   ports: ReadonlyArray<MessagePort>;
   source: MessageEventSource | null;
 }
-
 export interface CloseEvent extends Event {
   code: number;
   reason: string;
   wasClean: boolean;
 }
+export type ListenCallback = (data: any) => void;
+export type Listen = (callback: ListenCallback) => Socket;
+export type Connect = () => Socket;
