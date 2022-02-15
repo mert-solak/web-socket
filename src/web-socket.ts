@@ -83,6 +83,11 @@ export class Socket {
   readonly connect: Connect = () => {
     this.socket = new WebSocket(this.url, this.protocols);
 
+    this.socket.removeEventListener('close', this.onCloseHandler);
+    this.socket.removeEventListener('open', this.onOpenHandler);
+    this.socket.removeEventListener('error', this.onErrorHandler);
+    this.socket.removeEventListener('message', this.onMessageHandler);
+
     this.socket.addEventListener('close', this.onCloseHandler);
     this.socket.addEventListener('open', this.onOpenHandler);
     this.socket.addEventListener('error', this.onErrorHandler);
